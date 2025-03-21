@@ -57,19 +57,37 @@ end thunderbird_fsm_tb;
 architecture test_bench of thunderbird_fsm_tb is 
 	
 	component thunderbird_fsm is 
---	  port(
-		
---	  );
+	   port(
+	       i_clk, i_reset : in std_logic;
+	       i_left, i_right: in std_logic;
+	       o_lights_L     : out std_logic_vector(2 downto 0); --LA -> 0 LC -> 2
+	       o_lights_R     : out std_logic_vector(2 downto 0) 
+	   );
 	end component thunderbird_fsm;
 
 	-- test I/O signals
+	signal w_R : std_logic := '0';
+	signal w_RL : std_logic_vector(1 downto 0) := "00";
+	signal w_clk : std_logic := '0';
 	
+	signal w_lights : std_logic_vector(5 downto 0) := "000000";
 	-- constants
-	
+	constant k_clk_period : time := 10 ns;
 	
 begin
 	-- PORT MAPS ----------------------------------------
-	
+	uut: thunderbird_fsm port map (
+	   i_clk => w_clk,
+	   i_reset => w_R,
+	   i_left => w_RL(1),
+	   i_right => w_RL(0),
+	   o_lights_L(0) => w_lights(0),
+	   o_lights_L(1) => w_lights(1),
+	   o_lights_L(2) => w_lights(2),
+	   o_lights_R(0) => w_lights(3),
+	   o_lights_R(1) => w_lights(4),
+	   o_lights_R(2) => w_lights(5)
+	);
 	-----------------------------------------------------
 	
 	-- PROCESSES ----------------------------------------	
