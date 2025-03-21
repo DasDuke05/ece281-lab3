@@ -92,11 +92,52 @@ begin
 	
 	-- PROCESSES ----------------------------------------	
     -- Clock process ------------------------------------
-    
+    clk_proc : process
+	begin
+		w_clk <= '0';
+        wait for k_clk_period/2;
+		w_clk <= '1';
+		wait for k_clk_period/2;
+	end process;
 	-----------------------------------------------------
 	
 	-- Test Plan Process --------------------------------
-	
+	sim_proc: process
+	begin		
+		w_RL <= "10";
+		wait for k_clk_period*1;
+		  assert w_lights = "000001" report "bad left 1" severity failure;
+		wait for k_clk_period*1;
+		  assert w_lights = "000011" report "bad left 2" severity failure;
+		wait for k_clk_period*1;
+		  assert w_lights = "000111" report "bad left 3" severity failure;
+		wait for k_clk_period*1;
+		  assert w_lights = "000000" report "bad left R" severity failure;
+		
+		w_RL <= "00";
+		wait for k_clk_period*1;
+		  assert w_lights = "000000" report "bad stop" severity failure;
+        
+        w_RL <= "01";
+		wait for k_clk_period*1;
+		  assert w_lights = "001000" report "bad right 1" severity failure;
+		wait for k_clk_period*1;
+		  assert w_lights = "011000" report "bad right 2" severity failure;
+		wait for k_clk_period*1;
+		  assert w_lights = "111000" report "bad right 3" severity failure;
+		wait for k_clk_period*1;
+		  assert w_lights = "000000" report "bad right R" severity failure;
+		  
+		w_RL <= "11";
+		wait for k_clk_period*1;
+		  assert w_lights = "111111" report "bad flash" severity failure;
+		wait for k_clk_period*1;
+		  assert w_lights = "000000" report "bad flash" severity failure;
+		
+		  
+		
+		wait;
+	end process;
 	-----------------------------------------------------	
 	
 end test_bench;
